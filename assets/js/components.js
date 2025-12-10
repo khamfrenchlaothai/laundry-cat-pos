@@ -778,6 +778,66 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                             </table>
                         </div>
                     </div>
+
+                    {/* Data Backup & Restore Section */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-8">
+                        <h3 className="font-bold text-lg text-gray-800 mb-4">📦 Data Backup & Restore</h3>
+                        <p className="text-gray-600 text-sm mb-4">Export your data for backup or import from a previous backup file.</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        const data = await DataStore.exportData();
+                                        const dataStr = JSON.stringify(data, null, 2);
+                                        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                                        const url = URL.createObjectURL(dataBlob);
+                                        const link = document.createElement('a');
+                                        link.href = url;
+                                        link.download = `laundry-cat-backup-${new Date().toISOString().split('T')[0]}.json`;
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                        URL.revokeObjectURL(url);
+                                        alert('✅ Data exported successfully!');
+                                    } catch (error) {
+                                        console.error('Export failed:', error);
+                                        alert('❌ Export failed. Please try again.');
+                                    }
+                                }}
+                                className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                            >
+                                <Download size={20} />
+                                Export Data
+                            </button>
+                            <label className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 cursor-pointer transition-colors">
+                                <Upload size={20} />
+                                Import Data
+                                <input
+                                    type="file"
+                                    accept=".json"
+                                    className="hidden"
+                                    onChange={async (e) => {
+                                        const file = e.target.files[0];
+                                        if (!file) return;
+
+                                        if (confirm('⚠️ This will replace ALL current data. Continue?')) {
+                                            try {
+                                                const text = await file.text();
+                                                const data = JSON.parse(text);
+                                                await onRestore(data);
+                                                alert('✅ Data imported successfully! Refreshing page...');
+                                                window.location.reload();
+                                            } catch (error) {
+                                                console.error('Import failed:', error);
+                                                alert('❌ Import failed. Please check the file and try again.');
+                                            }
+                                        }
+                                        e.target.value = ''; // Reset input
+                                    }}
+                                />
+                            </label>
+                        </div>
+                    </div>
                 </>
             )}
         </div>
