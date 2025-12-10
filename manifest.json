@@ -1,0 +1,27 @@
+{
+    "name": "Laundry Cat Vientiane POS",
+    "short_name": "Laundry Cat",
+    "description": "Professional Point of Sale system for Laundry Cat Vientiane laundromat",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#16a34a",
+    "orientation": "any",
+    "scope": "./",
+    "icons": [
+        {
+            "src": "assets/images/logo.jpeg",
+            "sizes": "192x192",
+            "type": "image/jpeg",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/images/logo.jpeg",
+            "sizes": "512x512",
+            "type": "image/jpeg",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["business", "productivity"],
+    "screenshots": []
+}
