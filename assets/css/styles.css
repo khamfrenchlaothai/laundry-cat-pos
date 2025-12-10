@@ -32,7 +32,9 @@ body {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Print styles */
@@ -40,9 +42,12 @@ body {
     body * {
         visibility: hidden;
     }
-    .print-area, .print-area * {
+
+    .print-area,
+    .print-area * {
         visibility: visible;
     }
+
     .print-area {
         position: absolute;
         left: 0;
@@ -51,7 +56,8 @@ body {
 }
 
 /* Touch-friendly buttons for tablet */
-button, .btn {
+button,
+.btn {
     min-height: 44px;
     min-width: 44px;
 }
@@ -62,4 +68,96 @@ button, .btn {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+/* Mobile/iPhone Responsive Styles */
+@media (max-width: 768px) {
+
+    /* Adjust font sizes for mobile */
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 1.25rem !important;
+    }
+
+    h2 {
+        font-size: 1.1rem !important;
+    }
+
+    h3 {
+        font-size: 1rem !important;
+    }
+
+    /* Make sidebar icons-only on mobile */
+    .sidebar-text {
+        display: none;
+    }
+
+    /* Adjust main content margin for narrow sidebar */
+    main {
+        margin-left: 60px !important;
+    }
+
+    /* Stack cart on mobile instead of sidebar */
+    .cart-sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100% !important;
+        height: auto;
+        max-height: 50vh;
+        z-index: 1000;
+        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Adjust product grid for mobile */
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+
+    /* Smaller product cards on mobile */
+    .product-card {
+        height: auto !important;
+        min-height: 140px;
+    }
+
+    /* Adjust padding for mobile */
+    .p-6 {
+        padding: 1rem !important;
+    }
+
+    .p-4 {
+        padding: 0.75rem !important;
+    }
+
+    /* Make tables scrollable on mobile */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 600px;
+    }
+}
+
+/* Extra small screens (iPhone SE, etc.) */
+@media (max-width: 375px) {
+    body {
+        font-size: 12px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    button,
+    .btn {
+        min-height: 40px;
+        font-size: 0.875rem;
+    }
 }
