@@ -4,22 +4,18 @@ body {
     margin: 0;
     padding: 0;
 }
-
 /* Hide scrollbar but keep functionality */
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
-
 .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
-
 /* Smooth transitions */
 * {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
-
 /* Loading spinner */
 .loading {
     display: inline-block;
@@ -30,38 +26,32 @@ body {
     border-top-color: #fff;
     animation: spin 1s ease-in-out infinite;
 }
-
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
-
 /* Print styles */
 @media print {
     body * {
         visibility: hidden;
     }
-
     .print-area,
     .print-area * {
         visibility: visible;
     }
-
     .print-area {
         position: absolute;
         left: 0;
         top: 0;
     }
 }
-
 /* Touch-friendly buttons for tablet */
 button,
 .btn {
     min-height: 44px;
     min-width: 44px;
 }
-
 /* Prevent text selection on double-tap (tablet) */
 .no-select {
     -webkit-user-select: none;
@@ -69,95 +59,76 @@ button,
     -ms-user-select: none;
     user-select: none;
 }
-
 /* Mobile/iPhone Responsive Styles */
 @media (max-width: 768px) {
-
-    /* Adjust font sizes for mobile */
-    body {
+    /* Base font size reduction */
+    html {
         font-size: 14px;
     }
-
-    h1 {
-        font-size: 1.25rem !important;
+    /* Compact Layout */
+    .p-6, .p-8 {
+        padding: 1rem !important;
     }
-
-    h2 {
-        font-size: 1.1rem !important;
+    .gap-6 {
+        gap: 1rem !important;
     }
-
-    h3 {
-        font-size: 1rem !important;
+    /* Sidebar - Ultra Compact */
+    .w-20 {
+        width: 3.5rem !important; /* 56px */
     }
-
-    /* Make sidebar icons-only on mobile */
-    .sidebar-text {
-        display: none;
-    }
-
-    /* Adjust main content margin for narrow sidebar */
+    
+    /* Main Content Adjustment */
     main {
-        margin-left: 60px !important;
+        margin-left: 3.5rem !important;
     }
-
-    /* Stack cart on mobile instead of sidebar */
-    .cart-sidebar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100% !important;
-        height: auto;
-        max-height: 50vh;
-        z-index: 1000;
-        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Adjust product grid for mobile */
-    .product-grid {
+    /* Product Grid - Always 2 columns on mobile */
+    .grid-cols-2, .grid-cols-3, .grid-cols-4 {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 0.5rem !important;
     }
-
-    /* Smaller product cards on mobile */
-    .product-card {
-        height: auto !important;
-        min-height: 140px;
+    /* Product Cards - Compact */
+    .h-48 {
+        height: 160px !important;
     }
-
-    /* Adjust padding for mobile */
-    .p-6 {
-        padding: 1rem !important;
+    
+    .h-32 {
+        height: 100px !important;
     }
-
-    .p-4 {
-        padding: 0.75rem !important;
+    /* Buttons - Compact but touchable */
+    button {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        font-size: 0.9rem !important;
     }
-
-    /* Make tables scrollable on mobile */
-    .table-container {
-        overflow-x: auto;
+    /* Dashboard Stats - 2 per row */
+    .md\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    /* Tables - Horizontal Scroll */
+    .overflow-x-auto {
         -webkit-overflow-scrolling: touch;
     }
-
-    table {
-        min-width: 600px;
+    
+    th, td {
+        padding: 0.5rem !important;
+        font-size: 0.85rem !important;
+    }
+    /* Hide less important columns on mobile */
+    .hidden-mobile {
+        display: none !important;
     }
 }
-
-/* Extra small screens (iPhone SE, etc.) */
+/* Small iPhone (SE/Mini) specific tweaks */
 @media (max-width: 375px) {
-    body {
-        font-size: 12px;
+    html {
+        font-size: 13px;
     }
-
-    .product-grid {
-        grid-template-columns: 1fr !important;
+    
+    .w-20 {
+        width: 3rem !important;
     }
-
-    button,
-    .btn {
-        min-height: 40px;
-        font-size: 0.875rem;
+    
+    main {
+        margin-left: 3rem !important;
     }
 }
