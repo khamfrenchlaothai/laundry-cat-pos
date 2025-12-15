@@ -18,9 +18,7 @@ const {
     Download,
     Upload
 } = window.lucide || window.LucideReact || {};
-
 // --- Shared Components ---
-
 const Sidebar = ({ activeTab, setActiveTab }) => {
     const menuItems = [
         { id: 'pos', label: 'POS', icon: <ShoppingBasket size={24} /> },
@@ -28,7 +26,6 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         { id: 'customers', label: 'Customers', icon: <Users size={24} /> },
         { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={24} /> },
     ];
-
     return (
         <div className="w-20 md:w-64 bg-white h-screen shadow-lg flex flex-col fixed left-0 top-0 z-50">
             <div className="h-16 flex items-center justify-center md:justify-start md:px-6 border-b border-gray-100">
@@ -52,12 +49,30 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                     </button>
                 ))}
             </nav>
+            {/* User Info & Logout */}
+            <div className="border-t border-gray-200 p-4">
+                <div className="hidden md:block mb-2">
+                    <p className="text-xs text-gray-500">Logged in as:</p>
+                    <p className="text-sm font-medium text-gray-700">{window.Auth?.getCurrentUser() || 'Admin'}</p>
+                </div>
+                <button
+                    onClick={() => {
+                        if (confirm('Are you sure you want to logout?')) {
+                            window.Auth?.logout();
+                        }
+                    }}
+                    className="w-full flex items-center justify-center md:justify-start p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span className="hidden md:block ml-2 font-medium">Logout</span>
+                </button>
+            </div>
         </div>
     );
 };
-
 // --- POS Components ---
-
 const ProductCard = ({ item, onAdd }) => (
     <div
         onClick={() => onAdd(item)}
@@ -80,11 +95,9 @@ const ProductCard = ({ item, onAdd }) => (
         </div>
     </div>
 );
-
 const PaymentModal = ({ total, onConfirm, onCancel }) => {
     const [paymentMethod, setPaymentMethod] = useState('Cash');
     const [printTicket, setPrintTicket] = useState(true);
-
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden">
@@ -107,7 +120,6 @@ const PaymentModal = ({ total, onConfirm, onCancel }) => {
                             </button>
                         ))}
                     </div>
-
                     <label className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
                         <input
                             type="checkbox"
@@ -117,7 +129,6 @@ const PaymentModal = ({ total, onConfirm, onCancel }) => {
                         />
                         <span className="font-medium text-gray-700">Print Ticket</span>
                     </label>
-
                     <div className="grid grid-cols-2 gap-3 pt-2">
                         <button
                             onClick={onCancel}
@@ -137,12 +148,10 @@ const PaymentModal = ({ total, onConfirm, onCancel }) => {
         </div>
     );
 };
-
 const Cart = ({ cart, onUpdateQuantity, onRemove, onClear, onCheckout, customers, selectedCustomer, onSelectCustomer }) => {
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-
     return (
         <div className="flex flex-col h-full bg-white border-l border-gray-200">
             {/* Customer Section */}
@@ -171,7 +180,6 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onClear, onCheckout, customers
                     </button>
                 )}
             </div>
-
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {cart.length === 0 ? (
@@ -210,7 +218,6 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onClear, onCheckout, customers
                     ))
                 )}
             </div>
-
             {/* Footer */}
             <div className="p-4 bg-gray-50 border-t border-gray-200">
                 <div className="flex justify-between mb-2 text-gray-600">
@@ -221,7 +228,6 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onClear, onCheckout, customers
                     <span>Total</span>
                     <span>{total.toLocaleString()} LAK</span>
                 </div>
-
                 <div className="grid grid-cols-2 gap-3">
                     <button
                         onClick={onClear}
@@ -241,7 +247,6 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onClear, onCheckout, customers
                     </button>
                 </div>
             </div>
-
             {/* Payment Modal */}
             {isPaymentModalOpen && (
                 <PaymentModal
@@ -253,7 +258,6 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onClear, onCheckout, customers
                     onCancel={() => setIsPaymentModalOpen(false)}
                 />
             )}
-
             {/* Customer Selection Modal */}
             {isCustomerModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -302,9 +306,7 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onClear, onCheckout, customers
         </div>
     );
 };
-
 // --- Dashboard Components ---
-
 const StatCard = ({ title, value, icon, color }) => (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
         <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white mr-4 ${color}`}>
@@ -316,11 +318,9 @@ const StatCard = ({ title, value, icon, color }) => (
         </div>
     </div>
 );
-
 const CustomerSearch = ({ customers, selectedCustomerId, onSelectCustomer }) => {
     const [query, setQuery] = useState('');
     const [isOpen, setIsOpen] = useState(false);
-
     // Filter customers based on query
     const filteredCustomers = useMemo(() => {
         if (!query) return [];
@@ -330,23 +330,19 @@ const CustomerSearch = ({ customers, selectedCustomerId, onSelectCustomer }) => 
             (c.phone && c.phone.includes(lowerQuery))
         ).slice(0, 10); // Limit to 10 results for performance
     }, [customers, query]);
-
     // Handle selection
     const handleSelect = (customer) => {
         onSelectCustomer(customer.id);
         setQuery('');
         setIsOpen(false);
     };
-
     // Handle clear
     const handleClear = () => {
         onSelectCustomer('');
         setQuery('');
     };
-
     // Get selected customer name for display
     const selectedCustomer = customers.find(c => c.id === selectedCustomerId);
-
     return (
         <div className="relative w-64">
             {selectedCustomerId ? (
@@ -378,7 +374,6 @@ const CustomerSearch = ({ customers, selectedCustomerId, onSelectCustomer }) => 
                             onFocus={() => setIsOpen(true)}
                         />
                     </div>
-
                     {isOpen && query && (
                         <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
                             {filteredCustomers.length > 0 ? (
@@ -397,7 +392,6 @@ const CustomerSearch = ({ customers, selectedCustomerId, onSelectCustomer }) => 
                             )}
                         </div>
                     )}
-
                     {isOpen && (
                         <div
                             className="fixed inset-0 z-40"
@@ -409,12 +403,10 @@ const CustomerSearch = ({ customers, selectedCustomerId, onSelectCustomer }) => 
         </div>
     );
 };
-
 const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRestore }) => {
     const [timeFilter, setTimeFilter] = useState('day');
     const [selectedCustomerId, setSelectedCustomerId] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' });
-
     const handleSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -422,7 +414,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
         }
         setSortConfig({ key, direction });
     };
-
     // Get filtered sales based on time filter
     const getFilteredSales = () => {
         const now = new Date();
@@ -431,7 +422,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
         startOfWeek.setDate(now.getDate() - now.getDay());
         startOfWeek.setHours(0, 0, 0, 0);
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
         return sales.filter(sale => {
             const saleDate = new Date(sale.date);
             if (timeFilter === 'day') return saleDate >= startOfDay;
@@ -440,12 +430,10 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
             return true;
         });
     };
-
     const filteredSales = getFilteredSales();
     const totalRevenue = filteredSales.reduce((sum, sale) => sum + sale.total, 0);
     const totalOrders = filteredSales.length;
     const averageOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
     // Item stats
     const itemStats = {};
     filteredSales.forEach(sale => {
@@ -455,7 +443,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
         });
     });
     const sortedItemStats = Object.entries(itemStats).sort(([, a], [, b]) => b - a);
-
     // Chart data
     const getChartData = () => {
         const data = {};
@@ -464,37 +451,31 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
         } else if (timeFilter === 'week') {
             ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(d => data[d] = 0);
         }
-
         filteredSales.forEach(sale => {
             const date = new Date(sale.date);
             let key;
             if (timeFilter === 'day') key = date.getHours() + ':00';
             else if (timeFilter === 'week') key = date.toLocaleDateString('en-US', { weekday: 'short' });
             else key = date.getDate();
-
             if (data[key] === undefined) data[key] = 0;
             data[key] += sale.total;
         });
         return data;
     };
-
     const chartData = getChartData();
     const maxChartValue = Math.max(...Object.values(chartData), 100000);
-
     // Customer specific logic
     const selectedCustomer = customers ? customers.find(c => c.id === selectedCustomerId) : null;
     const customerSales = selectedCustomer ? sales.filter(s => s.customerId === selectedCustomer.id) : [];
     const customerTotalSpent = customerSales.reduce((sum, s) => sum + s.total, 0);
     const customerTotalOrders = customerSales.length;
-
     const customerItemStats = {};
     customerSales.forEach(sale => {
         sale.items.forEach(item => {
             if (!customerItemStats[item.name]) customerItemStats[item.name] = 0;
-            customerItemStats[item.name] += item.quantity;
+            itemStats[item.name] += item.quantity;
         });
     });
-
     // Sort sales
     const sortedSales = [...sales].sort((a, b) => {
         if (sortConfig.key === 'date') {
@@ -506,7 +487,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
         }
         return 0;
     });
-
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -549,14 +529,12 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                         Load Demo Data
                     </button>
                 </div>
-
                 <div className="flex items-center gap-4">
                     <CustomerSearch
                         customers={customers}
                         selectedCustomerId={selectedCustomerId}
                         onSelectCustomer={setSelectedCustomerId}
                     />
-
                     {!selectedCustomerId && (
                         <div className="flex bg-white rounded-lg shadow-sm border border-gray-200 p-1">
                             {['day', 'week', 'month'].map(t => (
@@ -572,7 +550,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                     )}
                 </div>
             </div>
-
             {selectedCustomerId && selectedCustomer ? (
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center">
@@ -592,7 +569,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                             </div>
                         </div>
                     </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                             <h3 className="font-bold text-lg text-gray-800 mb-4">Service & Product Usage</h3>
@@ -624,7 +600,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                 )}
                             </div>
                         </div>
-
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                             <div className="p-6 border-b border-gray-100">
                                 <h3 className="font-bold text-lg text-gray-800">Purchase History</h3>
@@ -666,7 +641,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                         <StatCard title="Total Orders" value={totalOrders} icon={<ShoppingBasket size={24} />} color="bg-blue-500" />
                         <StatCard title="Average Order" value={`${averageOrder.toLocaleString()} LAK`} icon={<CreditCard size={24} />} color="bg-purple-500" />
                     </div>
-
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                             <h3 className="font-bold text-lg text-gray-800 mb-4">Sales Overview</h3>
@@ -678,7 +652,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                     <span>{(maxChartValue * 0.25).toLocaleString()}</span>
                                     <span>0</span>
                                 </div>
-
                                 <div className="absolute left-12 right-0 top-0 bottom-6 flex flex-col justify-between pointer-events-none">
                                     <div className="border-b border-gray-100 w-full h-0"></div>
                                     <div className="border-b border-gray-100 w-full h-0"></div>
@@ -686,7 +659,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                     <div className="border-b border-gray-100 w-full h-0"></div>
                                     <div className="border-b border-gray-200 w-full h-0"></div>
                                 </div>
-
                                 <div className="flex-1 flex items-end gap-2 z-10 h-full">
                                     {Object.entries(chartData).length === 0 ? (
                                         <div className="w-full h-full flex items-center justify-center text-gray-400">No data for this period</div>
@@ -705,7 +677,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                 </div>
                             </div>
                         </div>
-
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                             <h3 className="font-bold text-lg text-gray-800 mb-4">Top Items</h3>
                             <div className="space-y-4 overflow-y-auto h-64">
@@ -725,7 +696,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                             </div>
                         </div>
                     </div>
-
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                         <div className="p-6 border-b border-gray-100">
                             <h3 className="font-bold text-lg text-gray-800">Recent Sales</h3>
@@ -778,7 +748,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                             </table>
                         </div>
                     </div>
-
                     {/* Data Backup & Restore Section */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-8">
                         <h3 className="font-bold text-lg text-gray-800 mb-4">📦 Data Backup & Restore</h3>
@@ -819,7 +788,6 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                     onChange={async (e) => {
                                         const file = e.target.files[0];
                                         if (!file) return;
-
                                         if (confirm('⚠️ This will replace ALL current data. Continue?')) {
                                             try {
                                                 const text = await file.text();
@@ -844,21 +812,17 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
     );
 };
 // --- Item Manager ---
-
 const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
-
     const handleEdit = (item) => {
         setEditingItem(item);
         setIsModalOpen(true);
     };
-
     const handleAddNew = () => {
         setEditingItem(null);
         setIsModalOpen(true);
     };
-
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6">
@@ -871,7 +835,6 @@ const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
                     Add Item
                 </button>
             </div>
-
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <table className="w-full text-left">
                     <thead className="bg-gray-50 text-gray-500 text-sm">
@@ -903,7 +866,6 @@ const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
                     </tbody>
                 </table>
             </div>
-
             {isModalOpen && (
                 <ItemModal
                     item={editingItem}
@@ -917,7 +879,6 @@ const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
         </div>
     );
 };
-
 const ItemModal = ({ item, onClose, onSave }) => {
     const [formData, setFormData] = useState({
         name: '',
@@ -925,13 +886,11 @@ const ItemModal = ({ item, onClose, onSave }) => {
         category: '',
         image: ''
     });
-
     useEffect(() => {
         if (item) {
             setFormData(item);
         }
     }, [item]);
-
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave({
@@ -940,7 +899,6 @@ const ItemModal = ({ item, onClose, onSave }) => {
             price: parseFloat(formData.price)
         });
     };
-
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
@@ -1019,16 +977,13 @@ const ItemModal = ({ item, onClose, onSave }) => {
         </div>
     );
 };
-
 // --- Customer Manager ---
-
 const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCustomer }) => {
     // Similar structure to ItemsManager, simplified for brevity
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formData, setFormData] = useState({ name: '', phone: '' });
     const [editingId, setEditingId] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: 'orderCount', direction: 'desc' });
-
     // Calculate order counts
     const customersWithStats = useMemo(() => {
         return customers.map(c => {
@@ -1036,7 +991,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
             return { ...c, orderCount };
         });
     }, [customers, sales]);
-
     // Sort customers
     const sortedCustomers = useMemo(() => {
         let sortableCustomers = [...customersWithStats];
@@ -1053,7 +1007,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
         }
         return sortableCustomers;
     }, [customersWithStats, sortConfig]);
-
     const handleSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -1061,7 +1014,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
         }
         setSortConfig({ key, direction });
     };
-
     const handleSubmit = (e) => {
         e.preventDefault();
         const existingCustomer = customers.find(c => c.phone === formData.phone && c.id !== editingId);
@@ -1074,13 +1026,11 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
         setFormData({ name: '', phone: '' });
         setEditingId(null);
     };
-
     const handleEdit = (customer) => {
         setFormData({ name: customer.name, phone: customer.phone });
         setEditingId(customer.id);
         setIsModalOpen(true);
     };
-
     const handleExport = () => {
         const headers = ['ID,Name,Phone,Total Orders'];
         const rows = customersWithStats.map(c => `${c.id},${c.name},${c.phone},${c.orderCount}`);
@@ -1093,29 +1043,23 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
         link.click();
         document.body.removeChild(link);
     };
-
     const handleImport = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = (event) => {
             const text = event.target.result;
             const lines = text.split('\n');
             let importedCount = 0;
             let skippedCount = 0;
-
             // Skip header if present
             const startIndex = lines[0].toLowerCase().includes('name') ? 1 : 0;
-
             for (let i = startIndex; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
-
                 const parts = line.split(',');
                 // Handle simple CSV: Name,Phone or ID,Name,Phone
                 let name, phone;
-
                 if (parts.length >= 3) {
                     // ID,Name,Phone format (export format)
                     name = parts[1];
@@ -1127,7 +1071,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
                 } else {
                     continue;
                 }
-
                 if (name && phone) {
                     // Check duplicate
                     if (customers.find(c => c.phone === phone)) {
@@ -1147,7 +1090,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
         };
         reader.readAsText(file);
     };
-
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6">
@@ -1183,7 +1125,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
                     </button>
                 </div>
             </div>
-
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <table className="w-full text-left">
                     <thead className="bg-gray-50 text-gray-500 text-sm">
@@ -1236,7 +1177,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
                     </tbody>
                 </table>
             </div>
-
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
@@ -1263,7 +1203,6 @@ const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCusto
         </div>
     );
 };
-
 // Expose components to window
 window.Sidebar = Sidebar;
 window.ProductCard = ProductCard;
