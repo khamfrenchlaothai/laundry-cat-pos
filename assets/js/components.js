@@ -1,23 +1,27 @@
 console.log("Components.js loading...");
 const { useState, useEffect, useMemo } = React;
+// Safe Lucide Icon extraction
+const LucideIcons = window.lucide || window.LucideReact || {};
+// Fallback icon component if Lucide fails to load
+const FallbackIcon = () => React.createElement('span', null, '□');
 const {
-    LayoutDashboard,
-    ShoppingBasket,
-    Users,
-    Package,
-    Plus,
-    Trash2,
-    Search,
-    Menu,
-    X,
-    ChevronRight,
-    DollarSign,
-    CreditCard,
-    ChevronUp,
-    ChevronDown,
-    Download,
-    Upload
-} = window.lucide || window.LucideReact || {};
+    LayoutDashboard = FallbackIcon,
+    ShoppingBasket = FallbackIcon,
+    Users = FallbackIcon,
+    Package = FallbackIcon,
+    Plus = FallbackIcon,
+    Trash2 = FallbackIcon,
+    Search = FallbackIcon,
+    Menu = FallbackIcon,
+    X = FallbackIcon,
+    ChevronRight = FallbackIcon,
+    DollarSign = FallbackIcon,
+    CreditCard = FallbackIcon,
+    ChevronUp = FallbackIcon,
+    ChevronDown = FallbackIcon,
+    Download = FallbackIcon,
+    Upload = FallbackIcon
+} = LucideIcons;
 // --- Shared Components ---
 const Sidebar = ({ activeTab, setActiveTab }) => {
     const menuItems = [
