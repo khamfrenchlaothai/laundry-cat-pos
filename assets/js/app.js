@@ -1,8 +1,10 @@
 console.log("App.js loading...");
 const { useState, useEffect } = React;
-const { Search } = window.lucide || window.LucideReact || {};
+// Safe Lucide Icon extraction
+const LucideIconsApp = window.lucide || window.LucideReact || {};
+const FallbackIconApp = () => React.createElement('span', null, '🔍');
+const { Search = FallbackIconApp } = LucideIconsApp;
 const { Sidebar, ProductCard, Cart, Dashboard, ItemsManager, CustomersManager } = window;
-
 const App = () => {
     const [activeTab, setActiveTab] = useState('pos');
     const [items, setItems] = useState([]);
@@ -12,7 +14,6 @@ const App = () => {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
-
     // Load initial data from IndexedDB
     useEffect(() => {
         const loadData = async () => {
@@ -40,9 +41,7 @@ const App = () => {
         };
         loadData();
     }, []);
-
     // --- Actions ---
-
     const addToCart = (item) => {
         setCart(prev => {
             const existing = prev.find(i => i.id === item.id);
@@ -52,7 +51,6 @@ const App = () => {
             return [...prev, { ...item, quantity: 1, cartId: Date.now() }];
         });
     };
-
     const updateQuantity = (cartId, newQty) => {
         if (newQty < 1) {
             setCart(prev => prev.filter(i => i.cartId !== cartId));
@@ -60,12 +58,10 @@ const App = () => {
             setCart(prev => prev.map(i => i.cartId === cartId ? { ...i, quantity: newQty } : i));
         }
     };
-
     const clearCart = () => {
         setCart([]);
         setSelectedCustomer(null);
     };
-
     const generateTicket = (sale, shouldPrint) => {
         const ticketContent = `
             <!DOCTYPE html>
@@ -134,7 +130,6 @@ const App = () => {
             </body>
             </html>
         `;
-
         const ticketWindow = window.open('', '_blank', 'width=400,height=600');
         if (ticketWindow) {
             ticketWindow.document.open();
@@ -144,7 +139,6 @@ const App = () => {
             alert("Please allow popups to print tickets.");
         }
     };
-
     const handleCheckout = async (paymentMethod, shouldPrint) => {
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const sale = {
@@ -157,7 +151,6 @@ const App = () => {
             customerPhone: selectedCustomer ? selectedCustomer.phone : null,
             paymentMethod: paymentMethod
         };
-
         try {
             await DataStore.addSale(sale);
             setSales(prev => [...prev, sale]);
@@ -168,7 +161,6 @@ const App = () => {
             alert('Failed to save sale. Please try again.');
         }
     };
-
     const handleSaveItem = async (item) => {
         try {
             let newItems;
@@ -187,7 +179,6 @@ const App = () => {
             setItems(reloadedItems);
         }
     };
-
     const handleDeleteItem = async (id) => {
         if (confirm('Are you sure you want to delete this item?')) {
             const newItems = items.filter(i => i.id !== id);
@@ -195,7 +186,6 @@ const App = () => {
             await DataStore.saveItems(newItems);
         }
     };
-
     const handleSaveCustomer = async (customer) => {
         try {
             let newCustomers;
@@ -211,7 +201,6 @@ const App = () => {
             alert("Failed to save customer!");
         }
     };
-
     const handleDeleteCustomer = async (id) => {
         if (confirm('Delete this customer?')) {
             const newCustomers = customers.filter(c => c.id !== id);
@@ -219,7 +208,6 @@ const App = () => {
             await DataStore.saveCustomers(newCustomers);
         }
     };
-
     const handleDeleteSale = async (id) => {
         if (confirm('Are you sure you want to delete this sale? This will affect your total revenue.')) {
             const newSales = sales.filter(s => s.id !== id);
@@ -227,7 +215,6 @@ const App = () => {
             await DataStore.saveSales(newSales);
         }
     };
-
     const handleImportSales = async (newSales) => {
         try {
             const updatedSales = [...sales, ...newSales];
@@ -238,7 +225,6 @@ const App = () => {
             alert("Failed to import demo data. Storage might be full.");
         }
     };
-
     const handleRestoreData = async (data) => {
         try {
             setItems(data.items);
@@ -251,9 +237,7 @@ const App = () => {
             alert("Failed to restore data.");
         }
     };
-
     // --- Render ---
-
     if (loading) {
         return (
             <div className="flex h-screen items-center justify-center bg-gray-100">
@@ -264,16 +248,13 @@ const App = () => {
             </div>
         );
     }
-
     const filteredItems = items.filter(i =>
         i.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         i.category.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
     return (
         <div className="flex h-screen bg-gray-100 overflow-hidden font-sans text-gray-900">
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-
             <main className="flex-1 ml-20 md:ml-64 h-full overflow-hidden flex">
                 {activeTab === 'pos' && (
                     <>
@@ -292,7 +273,6 @@ const App = () => {
                                     />
                                 </div>
                             </div>
-
                             {/* Product Grid */}
                             <div className="flex-1 overflow-y-auto p-6">
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -302,7 +282,6 @@ const App = () => {
                                 </div>
                             </div>
                         </div>
-
                         {/* Cart Sidebar */}
                         <div className="w-96 h-full shadow-xl z-40 bg-white">
                             <Cart
@@ -318,7 +297,6 @@ const App = () => {
                         </div>
                     </>
                 )}
-
                 {activeTab === 'items' && (
                     <div className="flex-1 h-full overflow-y-auto">
                         <ItemsManager
@@ -328,7 +306,6 @@ const App = () => {
                         />
                     </div>
                 )}
-
                 {activeTab === 'customers' && (
                     <div className="flex-1 h-full overflow-y-auto">
                         <CustomersManager
@@ -339,7 +316,6 @@ const App = () => {
                         />
                     </div>
                 )}
-
                 {activeTab === 'dashboard' && (
                     <div className="flex-1 h-full overflow-y-auto">
                         <Dashboard
@@ -356,8 +332,6 @@ const App = () => {
         </div>
     );
 };
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
-
 console.log('✅ App initialized');
