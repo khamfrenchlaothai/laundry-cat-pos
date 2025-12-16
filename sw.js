@@ -1,4 +1,4 @@
-const CACHE_NAME = 'laundry-cat-v2';
+const CACHE_NAME = 'laundry-cat-v3';
 const urlsToCache = [
     './',
     './index.html',
@@ -19,7 +19,7 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                console.log('✅ Opened cache v2');
+                console.log('✅ Opened cache v3');
                 return cache.addAll(urlsToCache);
             })
     );
