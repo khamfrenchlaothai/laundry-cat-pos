@@ -19,19 +19,19 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- React & ReactDOM (Matching debug.html) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-    <!-- Babel for JSX (Using cdnjs for reliability) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <!-- Babel for JSX (Matching debug.html) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <!-- Lucide Icons -->
     <script>
         window.react = window.React;
         window.reactDOM = window.ReactDOM;
     </script>
-    <script crossorigin src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
 
     <!-- Custom Styles -->
     <link rel="stylesheet" href="assets/css/styles.css?v=2">
@@ -43,20 +43,20 @@
     <!-- Scripts -->
     <script src="assets/js/database.js"></script>
     <script src="assets/js/auth.js"></script>
-    <!-- Using v=4 to force cache refresh -->
-    <script type="text/babel" src="assets/js/components.js?v=4"></script>
-    <script type="text/babel" src="assets/js/app.js?v=4"></script>
+
+    <!-- App Scripts (v=5 to force refresh) -->
+    <script type="text/babel" src="assets/js/components.js?v=5"></script>
+    <script type="text/babel" src="assets/js/app.js?v=5"></script>
 
     <!-- Login Check -->
     <script>
         // Check if user is authenticated
         if (!Auth.isAuthenticated()) {
-            // Redirect to login page
             window.location.href = 'login.html';
         }
     </script>
 
-    <!-- Service Worker UN-Registration (Temporary Fix to kill cache) -->
+    <!-- Service Worker UN-Registration (Keep this to kill cache) -->
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function (registrations) {
