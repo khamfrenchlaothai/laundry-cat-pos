@@ -1,9 +1,11 @@
 console.log("App.js loading...");
 const { useState, useEffect } = React;
+
 // Safe Lucide Icon extraction
 const LucideIconsApp = window.lucide || window.LucideReact || {};
 const FallbackIconApp = () => React.createElement('span', null, '🔍');
 const { Search = FallbackIconApp } = LucideIconsApp;
+
 const { Sidebar, ProductCard, Cart, Dashboard, ItemsManager, CustomersManager } = window;
 
 const App = () => {
@@ -121,22 +123,22 @@ const App = () => {
                 </div>
                 <hr/>
                 <div>
+                    ${sale.items.map(item => `
                         <div class="item">
                             <span>${item.quantity}x ${item.name}</span>
                             <span>$${(item.price * item.quantity).toLocaleString()}</span>
                         </div>
-                    `).join('')
-    }
-                </div >
+                    `).join('')}
+                </div>
                 <div class="total">
                     Total: $${sale.total.toLocaleString()}
                 </div>
                 <div class="footer">
                     <p>Thank you for using our services!</p>
                 </div>
-            </body >
-            </html >
-    `;
+            </body>
+            </html>
+        `;
 
         const ticketWindow = window.open('', '_blank', 'width=400,height=600');
         if (ticketWindow) {
