@@ -514,18 +514,47 @@
             const updateQuantity = (cartId, newQty) => { if (newQty < 1) { setCart(prev => prev.filter(i => i.cartId !== cartId)); } else { setCart(prev => prev.map(i => i.cartId === cartId ? { ...i, quantity: newQty } : i)); } };
             const clearCart = () => { setCart([]); setSelectedCustomer(null); };
 
-            const generateTicket = (sale, shouldPrint) => {
+            const generateTicket = (sale, ticketWindow) => {
                 const ticketContent = `
                     <!DOCTYPE html><html><head><title>Ticket #${sale.id}</title><style>@page { size: 80mm auto; margin: 0; } body { font-family: monospace; width: 78mm; margin: 0 auto; padding: 5px; font-size: 12px; } .header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px; } .header h2 { font-size: 16px; margin: 5px 0; } .header p { margin: 2px 0; } .item { display: flex; justify-content: space-between; margin-bottom: 3px; } .total { border-top: 1px dashed #000; margin-top: 5px; padding-top: 5px; font-weight: bold; text-align: right; font-size: 14px; } .footer { text-align: center; margin-top: 10px; font-size: 10px; } hr { border-top: 1px dashed #000; border-bottom: none; margin: 5px 0; } #print-btn { display: block; width: 100%; padding: 10px; background: #22c55e; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 20px; } @media print { #print-btn { display: none; } body { padding: 0; } }</style></head><body><button id="print-btn" onclick="window.print()">🖨️ PRINT TICKET</button><div class="header"><h2>Laundry Cat Vientiane</h2><p>Ticket #: ${sale.id}</p><p>Date Issued: ${new Date(sale.date).toLocaleString()}</p><p>Payment: <strong>${sale.paymentMethod}</strong></p></div><div><p>Customer: ${sale.customerName || 'Guest'}</p>${sale.customerId ? `<p>Customer ID: ${sale.customerId}</p>` : ''}${sale.customerPhone ? `<p>Phone: ${sale.customerPhone}</p>` : ''}</div><hr/><div>${sale.items.map(item => `<div class="item"><span>${item.quantity}x ${item.name}</span><span>${(item.price * item.quantity).toLocaleString()} LAK</span></div>`).join('')}</div><div class="total">Total: ${sale.total.toLocaleString()} LAK</div><div class="footer"><p>Thank you for using our services!</p></div></body></html>
                 `;
-                const ticketWindow = window.open('', '_blank', 'width=400,height=600');
-                if (ticketWindow) { ticketWindow.document.open(); ticketWindow.document.write(ticketContent); ticketWindow.document.close(); } else { alert("Please allow popups to print tickets."); }
+                if (ticketWindow) {
+                    ticketWindow.document.open();
+                    ticketWindow.document.write(ticketContent);
+                    ticketWindow.document.close();
+                }
             };
 
             const handleCheckout = async (paymentMethod, shouldPrint) => {
+                // 1. Open window IMMEDIATELY to bypass popup blocker
+                let ticketWindow = null;
+                if (shouldPrint) {
+                    ticketWindow = window.open('', '_blank', 'width=400,height=600');
+                    if (ticketWindow) {
+                        ticketWindow.document.write('<html><body><h3>Generating Ticket...</h3></body></html>');
+                    } else {
+                        alert("Popup blocked! Please allow popups for this site in Settings.");
+                    }
+                }
+
                 const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 const sale = { id: Date.now(), date: new Date().toISOString(), items: cart, total: total, customerId: selectedCustomer ? selectedCustomer.id : null, customerName: selectedCustomer ? selectedCustomer.name : null, customerPhone: selectedCustomer ? selectedCustomer.phone : null, paymentMethod: paymentMethod };
-                try { await DataStore.addSale(sale); setSales(prev => [...prev, sale]); generateTicket(sale, shouldPrint); clearCart(); } catch (error) { console.error('Failed to save sale:', error); alert('Failed to save sale. Please try again.'); }
+
+                try {
+                    await DataStore.addSale(sale);
+                    setSales(prev => [...prev, sale]);
+
+                    // 2. Fill the window with content
+                    if (shouldPrint && ticketWindow) {
+                        generateTicket(sale, ticketWindow);
+                    }
+
+                    clearCart();
+                } catch (error) {
+                    console.error('Failed to save sale:', error);
+                    alert('Failed to save sale. Please try again.');
+                    if (ticketWindow) ticketWindow.close(); // Close if failed
+                }
             };
 
             const handleSaveItem = async (item) => { try { let newItems; if (items.find(i => i.id === item.id)) { newItems = items.map(i => i.id === item.id ? item : i); } else { newItems = [...items, item]; } setItems(newItems); await DataStore.saveItems(newItems); } catch (error) { console.error("Failed to save items:", error); alert("Failed to save item! Storage might be full."); const reloadedItems = await DataStore.getItems(); setItems(reloadedItems); } };
