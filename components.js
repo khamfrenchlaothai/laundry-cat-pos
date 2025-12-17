@@ -610,7 +610,7 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                         <div className="flex gap-8 mt-4 md:mt-0 text-right">
                             <div>
                                 <p className="text-gray-500 text-sm">Total Spent</p>
-                                <p className="text-xl font-bold text-green-600">{customerTotalSpent.toLocaleString()} LAK</p>
+                                <p className="text-xl font-bold text-green-600">${customerTotalSpent.toLocaleString()}</p>
                             </div>
                             <div>
                                 <p className="text-gray-500 text-sm">Total Orders</p>
@@ -671,7 +671,7 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                                 <td className="p-4 text-gray-500 font-mono text-xs">#{sale.id}</td>
                                                 <td className="p-4 text-gray-600 text-sm">{new Date(sale.date).toLocaleString()}</td>
                                                 <td className="p-4 text-gray-600 text-sm">{sale.items.length} items</td>
-                                                <td className="p-4 text-right font-bold text-green-600 text-sm">{sale.total.toLocaleString()} LAK</td>
+                                                <td className="p-4 text-right font-bold text-green-600 text-sm">${sale.total.toLocaleString()}</td>
                                             </tr>
                                         ))}
                                         {customerSales.length === 0 && (
@@ -688,9 +688,9 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
             ) : (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <StatCard title="Total Revenue" value={`${totalRevenue.toLocaleString()} LAK`} icon={<DollarSign size={24} />} color="bg-green-500" />
+                        <StatCard title="Total Revenue" value={`$${totalRevenue.toLocaleString()}`} icon={<DollarSign size={24} />} color="bg-green-500" />
                         <StatCard title="Total Orders" value={totalOrders} icon={<ShoppingBasket size={24} />} color="bg-blue-500" />
-                        <StatCard title="Average Order" value={`${averageOrder.toLocaleString()} LAK`} icon={<CreditCard size={24} />} color="bg-purple-500" />
+                        <StatCard title="Average Order" value={`$${averageOrder.toLocaleString()}`} icon={<CreditCard size={24} />} color="bg-purple-500" />
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -721,7 +721,7 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                             <div key={key} className="flex-1 flex flex-col items-center group h-full justify-end">
                                                 <div className="w-full bg-green-200 rounded-t-sm hover:bg-green-300 transition-all relative" style={{ height: `${(value / maxChartValue) * 100}%` }}>
                                                     <div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
-                                                        {value.toLocaleString()} LAK
+                                                        ${value.toLocaleString()}
                                                     </div>
                                                 </div>
                                                 <span className="absolute bottom-0 text-xs text-gray-500 mt-2 truncate w-full text-center">{key}</span>
@@ -787,7 +787,7 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                             <td className="p-4 text-gray-500 font-mono text-xs">{sale.customerId ? sale.customerId : '-'}</td>
                                             <td className="p-4 font-medium text-gray-800">{sale.customerName || 'Guest'}</td>
                                             <td className="p-4 text-gray-600">{sale.items.length} items</td>
-                                            <td className="p-4 text-right font-bold text-green-600">{sale.total.toLocaleString()} LAK</td>
+                                            <td className="p-4 text-right font-bold text-green-600">${sale.total.toLocaleString()}</td>
                                             <td className="p-4 text-right">
                                                 <button onClick={() => onDeleteSale(sale.id)} className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50 transition-colors" title="Delete Sale">
                                                     <Trash2 size={18} />
@@ -851,14 +851,11 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
                                                 const text = await file.text();
                                                 const data = JSON.parse(text);
                                                 await onRestore(data);
-                                                alert('✅ Data imported successfully! Refreshing page...');
-                                                window.location.reload();
                                             } catch (error) {
                                                 console.error('Import failed:', error);
-                                                alert('❌ Import failed. Please check the file and try again.');
+                                                alert('❌ Invalid backup file.');
                                             }
                                         }
-                                        e.target.value = ''; // Reset input
                                     }}
                                 />
                             </label>
@@ -869,11 +866,12 @@ const Dashboard = ({ sales, onDeleteSale, customers, items, onImportSales, onRes
         </div>
     );
 };
-// --- Item Manager ---
+
+// --- Item & Customer Managers ---
 
 const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleEdit = (item) => {
         setEditingItem(item);
@@ -886,15 +884,15 @@ const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
     };
 
     return (
-        <div className="p-6 md:p-8 max-w-7xl mx-auto">
+        <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Items</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Items Manager</h2>
                 <button
                     onClick={handleAddNew}
-                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
                 >
                     <Plus size={20} />
-                    Add Item
+                    Add New Item
                 </button>
             </div>
 
@@ -902,24 +900,34 @@ const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
                 <table className="w-full text-left">
                     <thead className="bg-gray-50 text-gray-500 text-sm">
                         <tr>
-                            <th className="p-4 font-medium w-16">Image</th>
-                            <th className="p-4 font-medium">Name</th>
-                            <th className="p-4 font-medium">Category</th>
-                            <th className="p-4 font-medium">Price</th>
-                            <th className="p-4 font-medium text-right">Actions</th>
+                            <th className="p-4">Image</th>
+                            <th className="p-4">Name</th>
+                            <th className="p-4">Category</th>
+                            <th className="p-4">Price</th>
+                            <th className="p-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {items.map((item) => (
+                        {items.map(item => (
                             <tr key={item.id} className="hover:bg-gray-50">
                                 <td className="p-4">
-                                    <div className="w-10 h-10 rounded bg-gray-200 overflow-hidden">
-                                        {item.image && <img src={item.image} alt="" className="w-full h-full object-cover" />}
+                                    <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden">
+                                        {item.image ? (
+                                            <img src={item.image} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                                <Package size={20} />
+                                            </div>
+                                        )}
                                     </div>
                                 </td>
-                                <td className="p-4 font-medium text-gray-800">{item.name}</td>
-                                <td className="p-4 text-gray-600">{item.category}</td>
-                                <td className="p-4 font-medium">{item.price.toLocaleString()} LAK</td>
+                                <td className="p-4 font-medium">{item.name}</td>
+                                <td className="p-4 text-gray-500">
+                                    <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
+                                        {item.category}
+                                    </span>
+                                </td>
+                                <td className="p-4 font-bold text-green-600">${item.price.toLocaleString()}</td>
                                 <td className="p-4 text-right">
                                     <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700 mr-3">Edit</button>
                                     <button onClick={() => onDeleteItem(item.id)} className="text-red-500 hover:text-red-700">Delete</button>
@@ -933,112 +941,100 @@ const ItemsManager = ({ items, onSaveItem, onDeleteItem }) => {
             {isModalOpen && (
                 <ItemModal
                     item={editingItem}
-                    onClose={() => setIsModalOpen(false)}
                     onSave={(item) => {
                         onSaveItem(item);
                         setIsModalOpen(false);
                     }}
+                    onClose={() => setIsModalOpen(false)}
                 />
             )}
         </div>
     );
 };
 
-const ItemModal = ({ item, onClose, onSave }) => {
-    const [formData, setFormData] = useState({
+const ItemModal = ({ item, onSave, onClose }) => {
+    const [formData, setFormData] = useState(item || {
+        id: Date.now(),
         name: '',
         price: '',
-        category: '',
+        category: 'Wash',
         image: ''
     });
-
-    useEffect(() => {
-        if (item) {
-            setFormData(item);
-        }
-    }, [item]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave({
             ...formData,
-            id: item ? item.id : Date.now(),
-            price: parseFloat(formData.price)
+            price: Number(formData.price),
+            id: formData.id || Date.now()
         });
+    };
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData({ ...formData, image: reader.result });
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
-                <div className="p-6 border-b flex justify-between items-center">
-                    <h3 className="font-bold text-xl">{item ? 'Edit Item' : 'New Item'}</h3>
-                    <button onClick={onClose}><X size={24} /></button>
-                </div>
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+                <h3 className="font-bold text-xl mb-4">{item ? 'Edit Item' : 'New Item'}</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                         <input
                             required
                             type="text"
-                            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+                            className="w-full p-2 border rounded-lg"
                             value={formData.name}
                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                         />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                            <input
-                                required
-                                type="number"
-                                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
-                                value={formData.price}
-                                onChange={e => setFormData({ ...formData, price: e.target.value })}
-                            />
-                        </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Price (LAK)</label>
+                        <input
+                            required
+                            type="number"
+                            className="w-full p-2 border rounded-lg"
+                            value={formData.price}
+                            onChange={e => setFormData({ ...formData, price: e.target.value })}
+                        />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <input
-                            type="text"
-                            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+                        <select
+                            className="w-full p-2 border rounded-lg"
                             value={formData.category}
                             onChange={e => setFormData({ ...formData, category: e.target.value })}
-                        />
+                        >
+                            <option>Wash</option>
+                            <option>Dry</option>
+                            <option>Detergent</option>
+                            <option>Service</option>
+                            <option>Other</option>
+                        </select>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
                         <input
                             type="file"
                             accept="image/*"
-                            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
-                            onChange={e => {
-                                const file = e.target.files[0];
-                                if (file) {
-                                    if (file.size > 500000) { // 500KB limit
-                                        alert('Image is too large! Please choose an image under 500KB.');
-                                        e.target.value = ''; // Clear input
-                                        return;
-                                    }
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => {
-                                        setFormData({ ...formData, image: reader.result });
-                                    };
-                                    reader.readAsDataURL(file);
-                                }
-                            }}
+                            onChange={handleImageUpload}
+                            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                         />
                         {formData.image && (
-                            <img src={formData.image} alt="Preview" className="mt-2 h-20 w-20 object-cover rounded" />
+                            <img src={formData.image} alt="Preview" className="mt-2 h-20 w-20 object-cover rounded-lg" />
                         )}
                     </div>
-                    <div className="pt-4">
-                        <button
-                            type="submit"
-                            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold"
-                        >
-                            Save Item
-                        </button>
+                    <div className="flex justify-end gap-3 mt-6">
+                        <button type="button" onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                        <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Save Item</button>
                     </div>
                 </form>
             </div>
@@ -1046,251 +1042,123 @@ const ItemModal = ({ item, onClose, onSave }) => {
     );
 };
 
-// --- Customer Manager ---
-
-const CustomersManager = ({ customers, sales = [], onSaveCustomer, onDeleteCustomer }) => {
-    // Similar structure to ItemsManager, simplified for brevity
+const CustomersManager = ({ customers, sales, onSaveCustomer, onDeleteCustomer }) => {
+    const [editingCustomer, setEditingCustomer] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [formData, setFormData] = useState({ name: '', phone: '' });
-    const [editingId, setEditingId] = useState(null);
-    const [sortConfig, setSortConfig] = useState({ key: 'orderCount', direction: 'desc' });
-
-    // Calculate order counts
-    const customersWithStats = useMemo(() => {
-        return customers.map(c => {
-            const orderCount = sales.filter(s => s.customerId === c.id || s.customerName === c.name).length;
-            return { ...c, orderCount };
-        });
-    }, [customers, sales]);
-
-    // Sort customers
-    const sortedCustomers = useMemo(() => {
-        let sortableCustomers = [...customersWithStats];
-        if (sortConfig.key) {
-            sortableCustomers.sort((a, b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]) {
-                    return sortConfig.direction === 'asc' ? -1 : 1;
-                }
-                if (a[sortConfig.key] > b[sortConfig.key]) {
-                    return sortConfig.direction === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-        return sortableCustomers;
-    }, [customersWithStats, sortConfig]);
-
-    const handleSort = (key) => {
-        let direction = 'asc';
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
-        }
-        setSortConfig({ key, direction });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const existingCustomer = customers.find(c => c.phone === formData.phone && c.id !== editingId);
-        if (existingCustomer) {
-            alert(`Customer already exists: ${existingCustomer.name} (${existingCustomer.phone})`);
-            return;
-        }
-        onSaveCustomer({ ...formData, id: editingId || 'C' + Date.now() });
-        setIsModalOpen(false);
-        setFormData({ name: '', phone: '' });
-        setEditingId(null);
-    };
 
     const handleEdit = (customer) => {
-        setFormData({ name: customer.name, phone: customer.phone });
-        setEditingId(customer.id);
+        setEditingCustomer(customer);
         setIsModalOpen(true);
     };
 
-    const handleExport = () => {
-        const headers = ['ID,Name,Phone,Total Orders'];
-        const rows = customersWithStats.map(c => `${c.id},${c.name},${c.phone},${c.orderCount}`);
-        const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "customers.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
-    const handleImport = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const text = event.target.result;
-            const lines = text.split('\n');
-            let importedCount = 0;
-            let skippedCount = 0;
-
-            // Skip header if present
-            const startIndex = lines[0].toLowerCase().includes('name') ? 1 : 0;
-
-            for (let i = startIndex; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-
-                const parts = line.split(',');
-                // Handle simple CSV: Name,Phone or ID,Name,Phone
-                let name, phone;
-
-                if (parts.length >= 3) {
-                    // ID,Name,Phone format (export format)
-                    name = parts[1];
-                    phone = parts[2];
-                } else if (parts.length === 2) {
-                    // Name,Phone format
-                    name = parts[0];
-                    phone = parts[1];
-                } else {
-                    continue;
-                }
-
-                if (name && phone) {
-                    // Check duplicate
-                    if (customers.find(c => c.phone === phone)) {
-                        skippedCount++;
-                    } else {
-                        onSaveCustomer({
-                            id: 'C' + Date.now() + Math.random().toString(36).substr(2, 5),
-                            name: name.trim(),
-                            phone: phone.trim()
-                        });
-                        importedCount++;
-                    }
-                }
-            }
-            alert(`Import complete!\nAdded: ${importedCount}\nSkipped (Duplicate): ${skippedCount}`);
-            e.target.value = ''; // Reset input
-        };
-        reader.readAsText(file);
-    };
-
     return (
-        <div className="p-6 md:p-8 max-w-7xl mx-auto">
+        <div className="p-6">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">Customers</h2>
-                <div className="flex gap-2">
-                    <button
-                        onClick={handleExport}
-                        className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-gray-50"
-                    >
-                        <Download size={20} />
-                        Export CSV
-                    </button>
-                    <label className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-gray-50 cursor-pointer">
-                        <Upload size={20} />
-                        Import CSV
-                        <input
-                            type="file"
-                            accept=".csv"
-                            className="hidden"
-                            onChange={handleImport}
-                        />
-                    </label>
-                    <button
-                        onClick={() => {
-                            setEditingId(null);
-                            setFormData({ name: '', phone: '' });
-                            setIsModalOpen(true);
-                        }}
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
-                    >
-                        <Plus size={20} />
-                        Add Customer
-                    </button>
-                </div>
+                <button
+                    onClick={() => {
+                        setEditingCustomer(null);
+                        setIsModalOpen(true);
+                    }}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                >
+                    <Plus size={20} />
+                    Add Customer
+                </button>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <table className="w-full text-left">
                     <thead className="bg-gray-50 text-gray-500 text-sm">
                         <tr>
-                            <th className="p-4 font-medium">ID</th>
-                            <th
-                                className="p-4 font-medium cursor-pointer hover:bg-gray-100 transition-colors"
-                                onClick={() => handleSort('name')}
-                            >
-                                <div className="flex items-center gap-1">
-                                    Name
-                                    {sortConfig.key === 'name' && (
-                                        sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />
-                                    )}
-                                </div>
-                            </th>
-                            <th className="p-4 font-medium">Phone</th>
-                            <th
-                                className="p-4 font-medium cursor-pointer hover:bg-gray-100 transition-colors"
-                                onClick={() => handleSort('orderCount')}
-                            >
-                                <div className="flex items-center gap-1">
-                                    Total Orders
-                                    {sortConfig.key === 'orderCount' && (
-                                        sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />
-                                    )}
-                                </div>
-                            </th>
-                            <th className="p-4 font-medium text-right">Actions</th>
+                            <th className="p-4">Name</th>
+                            <th className="p-4">Phone</th>
+                            <th className="p-4">Total Spent</th>
+                            <th className="p-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {sortedCustomers.map((c) => (
-                            <tr key={c.id} className="hover:bg-gray-50">
-                                <td className="p-4 text-gray-500 font-mono text-xs">{c.id}</td>
-                                <td className="p-4 font-medium text-gray-800">{c.name}</td>
-                                <td className="p-4 text-gray-600">{c.phone}</td>
-                                <td className="p-4 text-gray-600 font-bold">{c.orderCount}</td>
-                                <td className="p-4 text-right flex justify-end gap-2">
-                                    <button
-                                        onClick={() => handleEdit(c)}
-                                        className="text-blue-500 hover:text-blue-700 font-medium"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button onClick={() => onDeleteCustomer(c.id)} className="text-red-500 hover:text-red-700">Delete</button>
-                                </td>
-                            </tr>
-                        ))}
+                        {customers.map(customer => {
+                            const totalSpent = sales
+                                .filter(s => s.customerId === customer.id)
+                                .reduce((sum, s) => sum + s.total, 0);
+
+                            return (
+                                <tr key={customer.id} className="hover:bg-gray-50">
+                                    <td className="p-4 font-medium">{customer.name}</td>
+                                    <td className="p-4 text-gray-500">{customer.phone}</td>
+                                    <td className="p-4 font-bold text-green-600">${totalSpent.toLocaleString()}</td>
+                                    <td className="p-4 text-right">
+                                        <button onClick={() => handleEdit(customer)} className="text-blue-500 hover:text-blue-700 mr-3">Edit</button>
+                                        <button onClick={() => onDeleteCustomer(customer.id)} className="text-red-500 hover:text-red-700">Delete</button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
-                        <div className="p-6 border-b flex justify-between items-center">
-                            <h3 className="font-bold text-xl">{editingId ? 'Edit Customer' : 'New Customer'}</h3>
-                            <button onClick={() => setIsModalOpen(false)}><X size={24} /></button>
-                        </div>
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                            <input
-                                required placeholder="Name"
-                                className="w-full p-2 border rounded-lg"
-                                value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
-                            />
-                            <input
-                                required placeholder="Phone" type="tel"
-                                className="w-full p-2 border rounded-lg"
-                                value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                            />
-                            <button type="submit" className="w-full bg-green-500 text-white py-3 rounded-lg font-bold">Save</button>
-                        </form>
-                    </div>
-                </div>
+                <CustomerModal
+                    customer={editingCustomer}
+                    onSave={(c) => {
+                        onSaveCustomer(c);
+                        setIsModalOpen(false);
+                    }}
+                    onClose={() => setIsModalOpen(false)}
+                />
             )}
         </div>
     );
 };
 
-// Expose components to window
+const CustomerModal = ({ customer, onSave, onClose }) => {
+    const [formData, setFormData] = useState(customer || {
+        id: Date.now(),
+        name: '',
+        phone: ''
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave({ ...formData, id: formData.id || Date.now() });
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+                <h3 className="font-bold text-xl mb-4">{customer ? 'Edit Customer' : 'New Customer'}</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input
+                            required
+                            type="text"
+                            className="w-full p-2 border rounded-lg"
+                            value={formData.name}
+                            onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input
+                            type="tel"
+                            className="w-full p-2 border rounded-lg"
+                            value={formData.phone}
+                            onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                        />
+                    </div>
+                    <div className="flex justify-end gap-3 mt-6">
+                        <button type="button" onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                        <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Save Customer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
 window.Sidebar = Sidebar;
 window.ProductCard = ProductCard;
 window.Cart = Cart;
