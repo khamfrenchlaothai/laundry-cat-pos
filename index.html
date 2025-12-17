@@ -480,72 +480,77 @@
                             <div><label className="block text-sm font-medium text-gray-700 mb-1">Phone</label><input type="tel" className="w-full p-2 border rounded-lg" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} /></div>
                             <div className="flex justify-end gap-3 mt-6"><button type="button" onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button><button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Save Customer</button></div>
                         </form>
-                        const TicketModal = ({sale, onClose}) => {
-                            useEffect(() => {
-                                // Auto-print when modal opens (optional, can be removed if preferred)
-                                // window.print(); 
-                            }, []);
+                    </div>
+                </div>
+            );
+        };
 
-                        return (
-                        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
-                            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-                                <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-                                    <h3 className="font-bold text-lg">Ticket #{sale.id}</h3>
-                                    <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
-                                        <X size={20} />
-                                    </button>
+        const TicketModal = ({ sale, onClose }) => {
+            useEffect(() => {
+                // Auto-print when modal opens (optional, can be removed if preferred)
+                // window.print(); 
+            }, []);
+
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+                        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
+                            <h3 className="font-bold text-lg">Ticket #{sale.id}</h3>
+                            <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
+                            <div id="ticket-content" className="bg-white p-4 shadow-sm mx-auto" style={{ width: '80mm', fontFamily: 'monospace', fontSize: '12px' }}>
+                                <div className="text-center border-b border-dashed border-black pb-2 mb-2">
+                                    <h2 className="text-base font-bold my-1">Laundry Cat Vientiane</h2>
+                                    <p className="my-0.5">Ticket #: {sale.id}</p>
+                                    <p className="my-0.5">Date: {new Date(sale.date).toLocaleString()}</p>
+                                    <p className="my-0.5">Payment: <strong>{sale.paymentMethod}</strong></p>
                                 </div>
-
-                                <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
-                                    <div id="ticket-content" className="bg-white p-4 shadow-sm mx-auto" style={{ width: '80mm', fontFamily: 'monospace', fontSize: '12px' }}>
-                                        <div className="text-center border-b border-dashed border-black pb-2 mb-2">
-                                            <h2 className="text-base font-bold my-1">Laundry Cat Vientiane</h2>
-                                            <p className="my-0.5">Ticket #: {sale.id}</p>
-                                            <p className="my-0.5">Date: {new Date(sale.date).toLocaleString()}</p>
-                                            <p className="my-0.5">Payment: <strong>{sale.paymentMethod}</strong></p>
-                                        </div>
-                                        <div className="mb-2">
-                                            <p className="my-0.5">Customer: {sale.customerName || 'Guest'}</p>
-                                            {sale.customerId && <p className="my-0.5">ID: {sale.customerId}</p>}
-                                            {sale.customerPhone && <p className="my-0.5">Phone: {sale.customerPhone}</p>}
-                                        </div>
-                                        <div className="border-t border-dashed border-black py-2">
-                                            {sale.items.map((item, i) => (
-                                                <div key={i} className="flex justify-between mb-1">
-                                                    <span>{item.quantity}x {item.name}</span>
-                                                    <span>{(item.price * item.quantity).toLocaleString()} LAK</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="border-t border-dashed border-black pt-2 mt-2 text-right font-bold text-sm">
-                                            Total: {sale.total.toLocaleString()} LAK
-                                        </div>
-                                        <div className="text-center mt-4 text-xs">
-                                            <p>Thank you for using our services!</p>
-                                        </div>
-                                    </div>
+                                <div className="mb-2">
+                                    <p className="my-0.5">Customer: {sale.customerName || 'Guest'}</p>
+                                    {sale.customerId && <p className="my-0.5">ID: {sale.customerId}</p>}
+                                    {sale.customerPhone && <p className="my-0.5">Phone: {sale.customerPhone}</p>}
                                 </div>
+                                <div className="border-t border-dashed border-black py-2">
+                                    {sale.items.map((item, i) => (
+                                        <div key={i} className="flex justify-between mb-1">
+                                            <span>{item.quantity}x {item.name}</span>
+                                            <span>{(item.price * item.quantity).toLocaleString()} LAK</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="border-t border-dashed border-black pt-2 mt-2 text-right font-bold text-sm">
+                                    Total: {sale.total.toLocaleString()} LAK
+                                </div>
+                                <div className="text-center mt-4 text-xs">
+                                    <p>Thank you for using our services!</p>
+                                </div>
+                            </div>
+                        </div>
 
-                                <div className="p-4 border-t bg-white grid grid-cols-2 gap-3">
-                                    <button
-                                        onClick={onClose}
-                                        className="py-3 rounded-lg border border-gray-300 font-medium text-gray-600 hover:bg-gray-50"
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            const printContent = document.getElementById('ticket-content').innerHTML;
-                                            const originalContents = document.body.innerHTML;
+                        <div className="p-4 border-t bg-white grid grid-cols-2 gap-3">
+                            <button
+                                onClick={onClose}
+                                className="py-3 rounded-lg border border-gray-300 font-medium text-gray-600 hover:bg-gray-50"
+                            >
+                                Close
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const printContent = document.getElementById('ticket-content').innerHTML;
+                                    const originalContents = document.body.innerHTML;
 
-                                            // Create a hidden iframe for printing to avoid losing app state
-                                            const iframe = document.createElement('iframe');
-                                            iframe.style.display = 'none';
-                                            document.body.appendChild(iframe);
+                                    // Create a hidden iframe for printing to avoid losing app state
+                                    const iframe = document.createElement('iframe');
+                                    iframe.style.display = 'none';
+                                    document.body.appendChild(iframe);
 
-                                            const doc = iframe.contentWindow.document;
-                                            doc.open();
-                                            doc.write(`
+                                    const doc = iframe.contentWindow.document;
+                                    doc.open();
+                                    doc.write(`
                                         <html>
                                         <head>
                                             <style>
@@ -571,126 +576,126 @@
                                         </body>
                                         </html>
                                     `);
-                                            doc.close();
+                                    doc.close();
 
-                                            iframe.contentWindow.focus();
-                                            iframe.contentWindow.print();
+                                    iframe.contentWindow.focus();
+                                    iframe.contentWindow.print();
 
-                                            // Cleanup
-                                            setTimeout(() => {
-                                                document.body.removeChild(iframe);
-                                            }, 1000);
-                                        }}
-                                        className="py-3 rounded-lg bg-green-500 text-white font-bold hover:bg-green-600 shadow-lg flex items-center justify-center gap-2"
-                                    >
-                                        <span className="text-xl">🖨️</span> Print Ticket
-                                    </button>
-                                </div>
-                            </div>
+                                    // Cleanup
+                                    setTimeout(() => {
+                                        document.body.removeChild(iframe);
+                                    }, 1000);
+                                }}
+                                className="py-3 rounded-lg bg-green-500 text-white font-bold hover:bg-green-600 shadow-lg flex items-center justify-center gap-2"
+                            >
+                                <span className="text-xl">🖨️</span> Print Ticket
+                            </button>
                         </div>
-                        );
+                    </div>
+                </div>
+            );
         };
 
         // --- MAIN APP ---
 
         const App = () => {
             const [activeTab, setActiveTab] = useState('pos');
-                        const [items, setItems] = useState([]);
-                        const [cart, setCart] = useState([]);
-                        const [customers, setCustomers] = useState([]);
-                        const [sales, setSales] = useState([]);
-                        const [selectedCustomer, setSelectedCustomer] = useState(null);
-                        const [searchQuery, setSearchQuery] = useState('');
-                        const [loading, setLoading] = useState(true);
-                        const [lastSale, setLastSale] = useState(null); // For ticket modal
+            const [items, setItems] = useState([]);
+            const [cart, setCart] = useState([]);
+            const [customers, setCustomers] = useState([]);
+            const [sales, setSales] = useState([]);
+            const [selectedCustomer, setSelectedCustomer] = useState(null);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [loading, setLoading] = useState(true);
+            const [lastSale, setLastSale] = useState(null); // For ticket modal
 
             useEffect(() => {
                 const loadData = async () => {
                     try {
-                            setLoading(true);
+                        setLoading(true);
                         const [loadedItems, loadedCustomers, loadedSales] = await Promise.all([
-                        DataStore.getItems(), DataStore.getCustomers(), DataStore.getSales()
+                            DataStore.getItems(), DataStore.getCustomers(), DataStore.getSales()
                         ]);
                         setItems(loadedItems); setCustomers(loadedCustomers); setSales(loadedSales);
-                    } catch (error) {console.error('Failed to load data:', error); alert('Failed to load data. Please refresh the page.'); } finally {setLoading(false); }
+                    } catch (error) { console.error('Failed to load data:', error); alert('Failed to load data. Please refresh the page.'); } finally { setLoading(false); }
                 };
-                        loadData();
+                loadData();
             }, []);
 
-            const addToCart = (item) => {setCart(prev => { const existing = prev.find(i => i.id === item.id); if (existing) { return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i); } return [...prev, { ...item, quantity: 1, cartId: Date.now() }]; }); };
-            const updateQuantity = (cartId, newQty) => { if (newQty < 1) {setCart(prev => prev.filter(i => i.cartId !== cartId)); } else {setCart(prev => prev.map(i => i.cartId === cartId ? { ...i, quantity: newQty } : i)); } };
-            const clearCart = () => {setCart([]); setSelectedCustomer(null); };
+            const addToCart = (item) => { setCart(prev => { const existing = prev.find(i => i.id === item.id); if (existing) { return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i); } return [...prev, { ...item, quantity: 1, cartId: Date.now() }]; }); };
+            const updateQuantity = (cartId, newQty) => { if (newQty < 1) { setCart(prev => prev.filter(i => i.cartId !== cartId)); } else { setCart(prev => prev.map(i => i.cartId === cartId ? { ...i, quantity: newQty } : i)); } };
+            const clearCart = () => { setCart([]); setSelectedCustomer(null); };
 
             const handleCheckout = async (paymentMethod, shouldPrint) => {
                 const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                        const sale = {id: Date.now(), date: new Date().toISOString(), items: cart, total: total, customerId: selectedCustomer ? selectedCustomer.id : null, customerName: selectedCustomer ? selectedCustomer.name : null, customerPhone: selectedCustomer ? selectedCustomer.phone : null, paymentMethod: paymentMethod };
+                const sale = { id: Date.now(), date: new Date().toISOString(), items: cart, total: total, customerId: selectedCustomer ? selectedCustomer.id : null, customerName: selectedCustomer ? selectedCustomer.name : null, customerPhone: selectedCustomer ? selectedCustomer.phone : null, paymentMethod: paymentMethod };
 
-                        try {
-                            await DataStore.addSale(sale); 
+                try {
+                    await DataStore.addSale(sale);
                     setSales(prev => [...prev, sale]);
 
-                        if (shouldPrint) {
-                            setLastSale(sale); // Show modal
+                    if (shouldPrint) {
+                        setLastSale(sale); // Show modal
                     }
 
-                        clearCart(); 
+                    clearCart();
                 } catch (error) {
-                            console.error('Failed to save sale:', error);
-                        alert('Failed to save sale. Please try again.');
+                    console.error('Failed to save sale:', error);
+                    alert('Failed to save sale. Please try again.');
                 }
             };
 
-            const handleSaveItem = async (item) => { try {let newItems; if (items.find(i => i.id === item.id)) {newItems = items.map(i => i.id === item.id ? item : i); } else {newItems = [...items, item]; } setItems(newItems); await DataStore.saveItems(newItems); } catch (error) {console.error("Failed to save items:", error); alert("Failed to save item! Storage might be full."); const reloadedItems = await DataStore.getItems(); setItems(reloadedItems); } };
+            const handleSaveItem = async (item) => { try { let newItems; if (items.find(i => i.id === item.id)) { newItems = items.map(i => i.id === item.id ? item : i); } else { newItems = [...items, item]; } setItems(newItems); await DataStore.saveItems(newItems); } catch (error) { console.error("Failed to save items:", error); alert("Failed to save item! Storage might be full."); const reloadedItems = await DataStore.getItems(); setItems(reloadedItems); } };
             const handleDeleteItem = async (id) => { if (confirm('Are you sure you want to delete this item?')) { const newItems = items.filter(i => i.id !== id); setItems(newItems); await DataStore.saveItems(newItems); } };
-            const handleSaveCustomer = async (customer) => { try {let newCustomers; if (customers.find(c => c.id === customer.id)) {newCustomers = customers.map(c => c.id === customer.id ? customer : c); } else {newCustomers = [...customers, customer]; } setCustomers(newCustomers); await DataStore.saveCustomers(newCustomers); } catch (error) {console.error("Failed to save customer:", error); alert("Failed to save customer!"); } };
+            const handleSaveCustomer = async (customer) => { try { let newCustomers; if (customers.find(c => c.id === customer.id)) { newCustomers = customers.map(c => c.id === customer.id ? customer : c); } else { newCustomers = [...customers, customer]; } setCustomers(newCustomers); await DataStore.saveCustomers(newCustomers); } catch (error) { console.error("Failed to save customer:", error); alert("Failed to save customer!"); } };
             const handleDeleteCustomer = async (id) => { if (confirm('Delete this customer?')) { const newCustomers = customers.filter(c => c.id !== id); setCustomers(newCustomers); await DataStore.saveCustomers(newCustomers); } };
             const handleDeleteSale = async (id) => { if (confirm('Are you sure you want to delete this sale?')) { const newSales = sales.filter(s => s.id !== id); setSales(newSales); await DataStore.saveSales(newSales); } };
-            const handleImportSales = async (newSales) => { try { const updatedSales = [...sales, ...newSales]; setSales(updatedSales); await DataStore.saveSales(updatedSales); } catch (error) {console.error("Import failed:", error); alert("Failed to import demo data. Storage might be full."); } };
-            const handleRestoreData = async (data) => { try {setItems(data.items); setCustomers(data.customers); setSales(data.sales); await DataStore.importData(data); alert("Data restored successfully!"); } catch (error) {console.error("Restore failed:", error); alert("Failed to restore data."); } };
+            const handleImportSales = async (newSales) => { try { const updatedSales = [...sales, ...newSales]; setSales(updatedSales); await DataStore.saveSales(updatedSales); } catch (error) { console.error("Import failed:", error); alert("Failed to import demo data. Storage might be full."); } };
+            const handleRestoreData = async (data) => { try { setItems(data.items); setCustomers(data.customers); setSales(data.sales); await DataStore.importData(data); alert("Data restored successfully!"); } catch (error) { console.error("Restore failed:", error); alert("Failed to restore data."); } };
 
-                        if (loading) { return (<div className="flex h-screen items-center justify-center bg-gray-100"><div className="text-center"><div className="loading mb-4"></div><p className="text-gray-600">Loading Laundry Cat POS...</p></div></div>); }
+            if (loading) { return (<div className="flex h-screen items-center justify-center bg-gray-100"><div className="text-center"><div className="loading mb-4"></div><p className="text-gray-600">Loading Laundry Cat POS...</p></div></div>); }
 
             const filteredItems = items.filter(i => i.name.toLowerCase().includes(searchQuery.toLowerCase()) || i.category.toLowerCase().includes(searchQuery.toLowerCase()));
 
-                        return (
-                        <div className="flex h-screen bg-gray-100 overflow-hidden font-sans text-gray-900">
-                            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                            <main className="flex-1 ml-20 md:ml-64 h-full overflow-hidden flex">
-                                {activeTab === 'pos' && (
-                                    <>
-                                        <div className="flex-1 flex flex-col h-full overflow-hidden">
-                                            <div className="h-16 bg-white border-b border-gray-200 flex items-center px-6 justify-between"><h1 className="text-xl font-bold text-gray-800">New Sale</h1><div className="relative w-64"><Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} /><input type="text" placeholder="Search items..." className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /></div></div>
-                                            <div className="flex-1 overflow-y-auto p-6"><div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">{filteredItems.map(item => (<ProductCard key={item.id} item={item} onAdd={addToCart} />))}</div></div>
-                                        </div>
-                                        <div className="w-96 h-full shadow-xl z-40 bg-white"><Cart cart={cart} onUpdateQuantity={updateQuantity} onRemove={(id) => updateQuantity(id, 0)} onClear={clearCart} onCheckout={handleCheckout} customers={customers} selectedCustomer={selectedCustomer} onSelectCustomer={setSelectedCustomer} /></div>
-                                    </>
-                                )}
-                                {activeTab === 'items' && (<div className="flex-1 h-full overflow-y-auto"><ItemsManager items={items} onSaveItem={handleSaveItem} onDeleteItem={handleDeleteItem} /></div>)}
-                                {activeTab === 'customers' && (<div className="flex-1 h-full overflow-y-auto"><CustomersManager customers={customers} sales={sales} onSaveCustomer={handleSaveCustomer} onDeleteCustomer={handleDeleteCustomer} /></div>)}
-                                {activeTab === 'dashboard' && (<div className="flex-1 h-full overflow-y-auto"><Dashboard sales={sales} onDeleteSale={handleDeleteSale} customers={customers} items={items} onImportSales={handleImportSales} onRestore={handleRestoreData} /></div>)}
-                            </main>
+            return (
+                <div className="flex h-screen bg-gray-100 overflow-hidden font-sans text-gray-900">
+                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <main className="flex-1 ml-20 md:ml-64 h-full overflow-hidden flex">
+                        {activeTab === 'pos' && (
+                            <>
+                                <div className="flex-1 flex flex-col h-full overflow-hidden">
+                                    <div className="h-16 bg-white border-b border-gray-200 flex items-center px-6 justify-between"><h1 className="text-xl font-bold text-gray-800">New Sale</h1><div className="relative w-64"><Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} /><input type="text" placeholder="Search items..." className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /></div></div>
+                                    <div className="flex-1 overflow-y-auto p-6"><div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">{filteredItems.map(item => (<ProductCard key={item.id} item={item} onAdd={addToCart} />))}</div></div>
+                                </div>
+                                <div className="w-96 h-full shadow-xl z-40 bg-white"><Cart cart={cart} onUpdateQuantity={updateQuantity} onRemove={(id) => updateQuantity(id, 0)} onClear={clearCart} onCheckout={handleCheckout} customers={customers} selectedCustomer={selectedCustomer} onSelectCustomer={setSelectedCustomer} /></div>
+                            </>
+                        )}
+                        {activeTab === 'items' && (<div className="flex-1 h-full overflow-y-auto"><ItemsManager items={items} onSaveItem={handleSaveItem} onDeleteItem={handleDeleteItem} /></div>)}
+                        {activeTab === 'customers' && (<div className="flex-1 h-full overflow-y-auto"><CustomersManager customers={customers} sales={sales} onSaveCustomer={handleSaveCustomer} onDeleteCustomer={handleDeleteCustomer} /></div>)}
+                        {activeTab === 'dashboard' && (<div className="flex-1 h-full overflow-y-auto"><Dashboard sales={sales} onDeleteSale={handleDeleteSale} customers={customers} items={items} onImportSales={handleImportSales} onRestore={handleRestoreData} /></div>)}
+                    </main>
 
-                            {/* Ticket Modal */}
-                            {lastSale && (
-                                <TicketModal sale={lastSale} onClose={() => setLastSale(null)} />
-                            )}
-                        </div>
-                        );
+                    {/* Ticket Modal */}
+                    {lastSale && (
+                        <TicketModal sale={lastSale} onClose={() => setLastSale(null)} />
+                    )}
+                </div>
+            );
         };
 
-                        const root = ReactDOM.createRoot(document.getElementById('root'));
-                        root.render(<App />);
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 
     <!-- Service Worker UN-Registration (Keep this to kill cache) -->
     <script>
-                        if ('serviceWorker' in navigator) {
-                            navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                                for (let registration of registrations) {
-                                    registration.unregister();
-                                    console.log('❌ Service Worker Unregistered');
-                                }
-                            });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                    console.log('❌ Service Worker Unregistered');
+                }
+            });
         }
     </script>
 </body>
